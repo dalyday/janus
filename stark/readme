@@ -1,0 +1,213 @@
+
+介绍：
+    专门用于为其他App提供快速实现增删改查的组件
+
+
+设计思路：
+    1.用户向 某个地方 去注册数据库表models,UserInfo
+    2.读取 某个地方 中所有的类，为每个类生成4个URL
+
+知识点：
+    1.在Django启动时，先解释一个文件
+    stark/apps.py文件：
+    from django.apps import AppConfig
+    class StarkConfig(AppConfig):
+        name = 'stark'
+        def ready(self):
+            from django.utils.module_loading import autodiscover_modules
+            # 去程序中已经注册的所有app目录中找，stark.py 并执行
+            autodiscover_modules('stark')
+
+    2.通过StarkSite类的urls方法：
+            for model_class,config_obj in self._registry.items():
+            app_label = model_class._meta.app_label
+            model_name = model_class._meta.model_name
+            temp = url(r'^%s/%s/' %(app_label,model_name),self.login)
+            pts.append(temp)
+
+
+        2.注册model类
+        1.app01创建models.py
+        from django.db import models
+        class UserInfo(models.Model):
+            name = models.CharField(max_length=32)
+            email = models.CharField(max_length=32)
+        class Role(models.Model):
+            title = models.CharField(max_length=32)
+
+        2.app01/stark.py
+        from stark.service import v1
+        from app01 import models
+        # 将models中的UserInfo类注册到【某个地方】
+        """
+        _registry = {
+            model.UserInfo: StarkConfig(model.UserInfo)
+            model.Role: StarkConfig(model.Role)
+        }
+        for k,v in _registry.items():
+            print(v.mcls)
+        """
+        v1.site.register(models.UserInfo)
+        v1.site.register(models.Role)
+
+        3.stark/service/v1.py
+        class StarkConfig(object):
+            def __init__(self,mcls):
+                self.mcls = mcls
+
+        class StarkSite(object):
+            def __init__(self):
+                self._registry = {}
+
+            def register(self,model_class):
+                self._registry[model_class] = StarkConfig(model_class)
+                print(self._registry)
+        site = StarkSite()
+
+        3.生成动态url，一级url分发（app_label,model_name）
+        urls.py:
+        from django.conf.urls import url
+        from django.contrib import admin
+        from stark.service import v1
+        urlpatterns = [
+            url(r'^stark/', v1.site.urls),
+        ]
+
+        stark/service/v1.py
+        from django.shortcuts import HttpResponse
+        class StarkConfig(object):
+            """
+            用于封装 单独数据库操作类
+            """
+            def __init__(self,mcls):
+                self.mcls = mcls
+
+        class StarkSite(object):
+            """
+               用于封装所有的 数据库操作类
+            """
+            def __init__(self):
+                self._registry = {}
+
+            def register(self,model_class):
+                self._registry[model_class] = StarkConfig(model_class)
+                print(self._registry)
+
+            @property
+            def urls(self):
+                from django.conf.urls import url
+                pts = [
+                    url(r'^login/',self.login),
+                ]
+                """
+                _registry = {
+                    model.UserInfo: StarkConfig(model.UserInfo)
+                    model.Role: StarkConfig(model.Role)
+                }
+                """
+                for model_class,comfig_obj in self._registry.items():
+                    app_label = model_class._meta.app_label
+                    model_name = model_class._meta.model_name
+                    temp = url(r'^%s,%s' %(app_label,model_name),self.login)
+                    pts.append(temp)
+
+                return pts,None,None
+            def login(self,request):
+                return HttpResponse('登录界面')
+        site = StarkSite()
+
+            4.生成动态url，二级url分发（增删改查）
+            stark/service/v1.py
+            from django.shortcuts import HttpResponse
+            from django.conf.urls import url
+            class StarkConfig(object):
+                """
+                用于封装 单独数据库操作类
+                """
+
+                def __init__(self, mcls):
+                    self.mcls = mcls
+
+                # 增删改查
+                @property
+                def urls(self):
+                    patterns = [
+                        url(r'^$', self.changelist_view),
+                        url(r'^add/$', self.add_view),
+                        url(r'^(\d+)/change/$', self.changet_view),
+                        url(r'^(\d+)/delete/$', self.delete_view),
+                    ]
+                    return patterns
+                def changelist_view(self, request):
+                    return HttpResponse('列表页面')
+                def add_view(self, request):
+                    return HttpResponse('增加页面')
+                def changet_view(self, request, nid):
+                    return HttpResponse('修改页面')
+                def delete_view(self, request, nid):
+                    return HttpResponse('删除页面')
+
+            class StarkSite(object):
+                """
+                   用于封装所有的 数据库操作类
+                """
+                def __init__(self):
+                    self._registry = {}
+
+                def register(self,model_class):
+                    self._registry[model_class] = StarkConfig(model_class)
+                    print(self._registry)
+
+                @property
+                def urls(self):
+                    from django.conf.urls import url
+                    pts = [
+                        url(r'^login/',self.login),
+                    ]
+                    """
+                    _registry = {
+                        models.UserInfo: StarkConfig(models.UserInfo),
+                        models.Role: StarkConfig(models.Role),
+                    }
+
+                    # /admin//app01/userinfo/           查看列表页面
+                    # /admin/app01/userinfo/add/        添加页面
+                    # /admin/app01/userinfo/1/change/   修改页面
+                    # /admin/app01/userinfo/1/delete/   删除页面
+
+
+                    /stark/   ->  ([
+                                    /login/
+                                    /app01/userinfo/  --> ([
+                                                                /                    查看列表
+                                                                add/                 添加
+                                                                (\d+)/change/        修改
+                                                                (\d+)/delete/        删除
+                                                            ])
+                                    /app01/role/
+                                                        --> ([
+                                                                /                   查看列表
+                                                                add/                添加
+                                                                (\d+)/change/        修改
+                                                                (\d+)/delete/        删除
+                                                            ])
+                                ])
+
+                    """
+                    for model_class,config_obj in self._registry.items():
+                        app_label = model_class._meta.app_label
+                        model_name = model_class._meta.model_name
+                        temp = url(r'^%s/%s/' %(app_label,model_name),(config_obj.urls,None,None))
+                        # app_label,model_name  打印结果 app01 userinfo
+                        # (config_obj.urls,None,None)是再一次分发，原([],None,None)[]可以是函数或者方法，返回的时候是列表，列表可以写增删改查
+                        pts.append(temp)
+
+                    return pts,None,None
+
+                def login(self,request):
+                    return HttpResponse('登录界面')
+
+            site = StarkSite()
+
+
+

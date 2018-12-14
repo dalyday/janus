@@ -1,0 +1,35 @@
+{#<!--加了hide-->#}
+{% for item in menu_list %}
+    <div class="item">
+        <div class="title">{{ item.title }}<span class="下三角没有添加"></span></div>
+        <div class="children hide">
+            {% for per in item.children %}
+                <a href="{{ per.url }}" class="{{ per.class }}">{{ per.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
+
+
+
+
+{#{% for item in menu_list %}#}
+{#    <div class="item">#}
+{#        <div class="title" id='{{ item.title}}' onclick="ChangeTitle('{{ item.title }}')">{{ item.title }}<span class="下三角没有添加"></span></div>#}
+{#        <div class="children hide">#}
+{#            {% for per in item.children %}#}
+{#                <a href="{{ per.url }}" class="{{ per.class }}">{{ per.title }}</a>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#{% endfor %}#}
+
+{#<script>#}
+{#    function ChangeTitle(nid) {#}
+{#        var current_title = document.getElementById(nid);#}
+{#        var r=current_title.innerText;#}
+{#        console.log(r);#}
+{#        current_title.nextElementSibling.classList.add('hide');#}
+{#    }#}
+{#</script>#}

@@ -1,0 +1,89 @@
+rbac基于角色的控制
+
+rbac组件，目的是创建公共app，用于多所有系统增加权限管理。
+
+1. 将rbac组件添加到project中
+
+2. 将rbac/migrations目录文件删除（除__init__.py 以外）
+
+3. 录入权限： 5个类，7张表
+
+4. 配置文件：
+    - 中间件
+        MIDDLEWARE = [
+            'django.middleware.security.SecurityMiddleware',
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            ...
+            'rbac.middlewares.rbac.RbacMiddleware',
+        ]
+    - 新增配置文件
+
+        # #################### 权限相关配置 #############################
+        PERMISSION_DICT_SESSION_KEY = "user_permission_dict_key"
+        PERMISSION_MENU_SESSION_KEY = "user_permission_menu_key"
+
+        REX_FORMAT = "^%s$"
+
+        VALID_LIST = [
+            '/login/',
+            '^/admin/.*',
+        ]
+5. 自动生成菜单
+
+{% load rbac %} 导入rbac文件
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/rbac/rbac.css"/>    引入rbac生成的菜单样式
+    <style>
+        body{
+            margin: 0px;
+        }
+        .pg-header{
+            height: 48px;
+            background: black;
+            color: white;
+        }
+        .pg-content .menu{
+            width: 230px;
+            background: #e2e9ed;
+            position: absolute;
+            left: 0;
+            top: 48px;
+            bottom: 0;
+        }
+        .pg-content .content{
+            position: absolute;
+            left: 230px;
+            top: 48px;
+            right: 0;
+            bottom: 0;
+            overflow: auto;/*超出也显示*/
+        }
+
+    </style>
+
+    {% block css %} {% endblock %}
+</head>
+<body>
+    <div class="pg-header">
+        头部菜单
+    </div>
+    <div class="pg-content">
+        <div class="menu">
+            <!--相当于执行def menu函数并返回值-->
+            {% menu request %}          生成动态菜单
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    {% block js %} {% endblock %}
+</body>
+</html>
+
+
+

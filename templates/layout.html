@@ -1,0 +1,89 @@
+{% load menu %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/stark/plugins/bootstrap-3.3.7-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/rbac/menu.css" />
+    {% block css %} {% endblock %}
+
+
+    <link href="/static/res/css/style.css" rel="stylesheet">
+
+
+
+</head>
+<body>
+    <div class="pg-header">
+        <div class="logo">
+            <div class="logo"><a href="/index/">管理系统</a></div>
+        </div>
+
+        <div class="dropdown ">
+          <button class="btn btn-default dropdown-toggle dropdown-menu-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            +新增
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a onclick="x_admin_show('资讯','http://www.baidu.com')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>资讯</a></li>
+            <li><a onclick="x_admin_show('图片','http://www.baidu.com')"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span>图片</a></li>
+            <li role="separator" class="divider"></li>
+          </ul>
+        </div>
+
+        <div class="dropdown right">
+          <button class="btn btn-default dropdown-toggle dropdown-menu-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            +用户状态
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a onclick="x_admin_show('个人信息',href='https://www.cnblogs.com/dalyday/')">个人信息</a></li>
+            <li><a onclick="x_admin_show('切换帐号',href='/login/')">切换帐号</a></li>
+            <li><a href="/login/">退出</a></li>
+            <li role="separator" class="divider"></li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- 左侧菜单开始 -->
+    <div class="pg-content">
+        <div class="menu">
+            {% menu_html request %}       <!-- \rbac\templates\rbac\menu.html-->
+        </div>
+        <!-- 左侧菜单结束 -->
+
+        <!-- 页面内容开始 -->
+        <div class="body">
+            {% block body %}{% endblock %}
+        </div>
+        <!-- 页面内容开结束-->
+
+        <script src="/static/jquery-1.12.4.js"></script>
+        <script src="/static/rbac/menu.js"></script>
+        <script src="/static/stark/plugins/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
+        <!-- 头部跳转 -->
+        <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script src="/static/lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="/static/js/xadmin.js"></script><!--百度弹窗-->
+
+
+        <script>
+        //百度统计可去掉
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+
+    </div>
+</body>
+</html>
+
+
+

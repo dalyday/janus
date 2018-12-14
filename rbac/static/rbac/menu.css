@@ -1,0 +1,111 @@
+
+body {
+    margin: 0;
+}
+
+.hide {
+    display: none;
+}
+
+.pg-header {
+    height: 48px;
+    border-bottom: 2px solid blue;
+    background-color: #222222;
+    line-height: 48px;
+}
+
+.pg-header .logo a{
+    float: left;             /*元素向左浮动*/
+    padding-left: 70px;    /*距离左边70*/
+    font-size: 18px;     /*字体大小*/
+    width: 220px;      /*行内标签：宽度220*/
+    color: #EEEEEE;
+    font-weight: bold;    /*字体加粗*/
+}
+
+.pg-header .dropdown {
+    float: left;
+    color: #EEEEEE;
+    padding-top: 0;
+}
+
+.pg-header .right{
+    float: right;
+    padding-right: 30px;
+    color: #fff;
+    /*cursor: pointer;*/
+    width: 200px;
+}
+
+
+.pg-content .menu {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    padding-top: 10px;
+    border-right: 1px solid #EEEEEE;    /*  右边框1 */
+    background-color: #EEEEEE;
+}
+
+.pg-content .menu .title {        /*  菜单标题 */
+    padding: 8px;
+    border-bottom: 1px solid #EEEEEE;
+    border-top: 1px solid #EEEEEE;
+    cursor: pointer;
+}
+
+.pg-content .menu .title:hover {        /* 鼠标挪故去背景色变化*/
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+/*span .glyphicon .glyphicon-menu-down{  !*  右边框1 *!*/
+    /*float: right;*/
+    /*margin-right: 25px;*/
+    /*line-height: 8px;*/
+    /*font-size: 18px;*/
+    /*color: #666;*/
+    /*padding: 8px;*/
+/*}*/
+
+.pg-content.menu .item .children {
+    padding-left: 30px;
+    cursor: pointer;              /*   无    */
+}
+
+.pg-content .menu .item .children a {
+    border-left: 3px solid transparent;
+    display: block;
+    padding: 5px;
+    padding-left: 20px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.pg-content .menu .item .children a.active {
+    border-left: 3px solid #337ab7;              /* #f36a5a  之前的橙色  */
+    font-weight: bold;
+    background-color: #e7ecf1;
+    color: red;
+}
+
+
+.pg-content .menu .item{
+    border-bottom: 1px solid #e5e5e5;      /* 菜单底部有个1px边框 */
+}
+
+.pg-content .body {     /* 身体 */
+    position: absolute;
+    top: 48px;
+    left: 225px;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+    /*background-color: #EEEEEE;*/
+}
+
+

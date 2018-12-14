@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="/static/stark/plugins/bootstrap-3.3.7-dist/css/bootstrap.css"/>
+        <style>
+            .comb-search .item{
+                margin: 3px 0;
+            }
+            .comb-search .item a{
+                border: 1px solid #dddddd;
+                display: inline-block;
+                padding: 3px 6px;
+            }
+            .comb-search .item a.active{
+                background-color: #337ab7;
+                color: white;
+            }
+
+        </style>
+    </head>
+    {% block css %}{% endblock %}
+<body>
+    {% block body %}{% endblock %}
+
+    {% block js %} {% endblock %}
+</body>
+</html>

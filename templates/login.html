@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .bg {
+            background-image: url(/static/images/g.jpg);
+            background-repeat:no-repeat;
+            height: 733px;
+            background-size:100% 100%;
+            position: relative;
+        }
+        .bg .login{
+            position: fixed;
+            margin: 200px 950px ;
+            float: right;
+            height: 300px;
+            width: 325px;
+            border-radius:5px;
+            background-color: #fff;
+            opacity: 0.8;
+            border: solid 1.5px #222222;
+        }
+        .login p{
+            height: 47px;
+            line-height: 50px;
+            font-weight: 700;
+            color: black;
+        }
+        .login .lp{
+            text-align: center;
+            font-size: 1.5em;
+        }
+        .login .linput{
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        .login .rinput{
+            font-size: 14px;
+            margin-left: 18px;
+            line-height: 30px;
+        }
+        .lbutton{
+            margin-top: 22px;
+            margin-left: 90px;
+            width: 255px;
+        }
+        .lbutton input{
+            background-color: #85CD2F;
+            height: 35px;
+            width: 95px;
+            color: #fff;
+            font-weight: 700;
+            border: 1px solid #5BBB1D;
+            border-radius: 3px;
+            position: absolute;
+            margin-bottom: 30px;
+            margin-left: 16px;
+        }
+        .custom{
+            position: fixed ;
+            top: 225px;
+            left: 350px;
+            color: #222222;
+        }
+        .custom p{
+            height: 30px;
+            line-height: 50px;
+            font-size: 14px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <div class="login">
+            <div style="position: relative">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <p class="lp">用户登录</p>
+                    <p class="linput">{{ form.username.label }}:{{ form.username }}{{ form.username.errors.0}}</p>
+                    <p class="rinput">{{ form.password.label }}:{{ form.password }}{{ form.password.errors.0}}</p>
+                    <div class="lbutton">
+                        <input type="submit" value="登  录"/>
+                    </div>
+                </form>
+            </div>
+
+            <div class="custom">
+                <h2>账户示例</h2>
+                <p>用户名：代海风 密码：123</p>
+                <p>用户名：弓建冬 密码：123</p>
+                <p>用户名：李晓兵 密码：123</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
